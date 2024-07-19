@@ -1,0 +1,44 @@
+Server Terminal:
+1. Compile the server :
+   - `javac KeyValueStoreServerImpl.java`
+2. Run the server: pass 5 port numbers
+   - `java KeyValueStoreServerImpl <Port Number> <Port Number> <Port Number> <Port Number> <Port Number>`
+     Example: `java RMIRegistry 3200 3201 3202 3203 3204`
+
+Client Terminal:
+1. Compile the client code:
+   - `javac Client.java`
+2. Run the client:
+   - `java Client`
+     Example: `java Client`
+3. Upon starting the client, the first five PUT, GET, and DELETE requests are automated to be sent to the server directly. Afterward, users can input their requests manually.
+4.In client terminal, we can give input as server to which wants to connect.
+
+
+Additional Details:
+1. Both the server and client utilize Remote Method Invocation (RMI) for communication.
+2. Requests from the client to the server should be provided in the format: PUT <key> <value>, GET <key>, or DELETE <key> or SHUTDOWN, with each word separated by a space. Ensure to start with PUT to avoid key not found errors.
+   Valid examples:
+    - `PUT 3 4`
+    - `PUT mango fruits`
+    - `GET 3`
+    - `GET mango`
+    - `DELETE 3`
+      Invalid examples:
+    - `PUT`
+    - `PUT 5`
+    - `PUT 6 7 8`
+    - `GET`
+    - `DELETE 5 6`
+    - `DELETE`
+3.Shutdown will gracefully exit the client and server will stay alive until interrupted by ctrl+c;
+4. Keys and values are of string data type in the hashmap.
+
+Executive Summary:
+This project builds upon Project #2 by extending the Key-Value Store server to operate across five distinct servers, thus increasing server bandwidth and ensuring availability. The goal is to replicate the key-value store across multiple server instances to enhance performance and fault tolerance. Additionally, a two-phase protocol for updates is implemented to ensure consistency across the replicated key-value stores.
+Technical Impression:
+To achieve replication across multiple servers, each server instance hosts a replicated version of the key-value store. Clients can now contact any of the five replica servers to perform operations such as PUT and DELETE. The client code is modified to accommodate this change, allowing it to interact with any replica server seamlessly.
+For consistency across replicas, a two-phase commit (2PC) protocol is implemented for updates. When a client issues a PUT or DELETE operation to any server replica, the receiving replica ensures that the updates are received and committed successfully across all replicas before confirming the operation. This ensures that the data remains consistent across all server replicas
+Example:
+In real-world distributed systems, such as a cloud-based storage service, replicating data across multiple servers is essential for ensuring high availability and fault tolerance. For instance, consider a cloud storage platform where users can store and retrieve their files from anywhere in the world. By replicating the data across multiple server instances located in different geographical regions, the platform can ensure that users can access their files quickly and reliably, even if one or more servers fail.
+To maintain data consistency across the replicated servers, the platform employs a sophisticated two-phase commit protocol for updates. When a user uploads a file or modifies existing data, the platform coordinates the update process across all server replicas using the 2PC protocol. This ensures that the changes are successfully propagated to all replicas before confirming the operation to the user, thereby maintaining data consistency and integrity across the distributed system.
